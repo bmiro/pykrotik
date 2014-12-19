@@ -26,15 +26,19 @@ class MikrotikApi:
             response.append(element)
         return response
 
-    def exec_command(self, command, raw_response=False):
+    def exec_command(self, command, query_word=None, raw_response=False):
         """ Execute command to device.
         " @return the response as a dict by default
         " if you whant the response as set the raw_response param
         " to True
+        " Pass a list of query words to filter if needed i.e.
+        " ['?name=CLIEXXX', '?service=pppoe']
         """
         response = []
+        if not query_word:
+            query_word = []
 
-        self.__apiros.writeSentence([command])
+        self.__apiros.writeSentence([command] + query_word)
         finished = False
         while not finished:
             # Select wait for i/o in socket
