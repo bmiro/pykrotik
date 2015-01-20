@@ -5,12 +5,14 @@ from apiros import ApiRos
 
 class MikrotikApi:
     def __init__(self, host, username, password='', port=8728, timeout=10):
+        self._timeout = timeout
+
         self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.__socket.settimeout(self._timeout)
+
         self.__socket.connect((host, port))
         self.__apiros = ApiRos(self.__socket)
         self.__apiros.login(username, password)
-
-        self._timeout = timeout
 
     def __attr_to_key_value(self, attr):
         elem = attr[1:] # Remove first =
@@ -43,15 +45,11 @@ class MikrotikApi:
 
         timeout = timeout or self._timeout
 
-        print 'Start'
-
         self.__apiros.writeSentence([command] + query_word)
         finished = False
         while not finished:
             # Select wait for i/o in socket
-            print 'Helo'
             r = select.select([self.__socket], [], [], timeout)
-            print r
             if self.__socket in r[0]:
                 resp = self.__apiros.readSentence()
                 if '!done' in resp:
