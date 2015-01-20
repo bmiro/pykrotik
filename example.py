@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from mikrotik.mikrotikapi import MikrotikApi
+from pykrotik import MikrotikApi
 
-mtk = MikrotikApi('10.30.0.25', 'admin', '')
-print mtk.exec_command('/interface/wireless/registration-table/print')
+# Make sure to enable API at the device:
+# /ip service enable api 
+
+mtk = MikrotikApi('192.168.88.1', 'admin', '')
+print mtk.exec_command('/ip/address/print')
