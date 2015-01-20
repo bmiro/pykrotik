@@ -3,12 +3,12 @@
 from setuptools import setup
 
 setup(
-    name='mikrotik',
+    name='pykrotik',
     version='0.0.1-dev',
     url='',
     author='Bartomeu Miro Mateu',
     author_email='bartomeumiro@gmail.com',
-    packages=['mikrotik'],
+    packages=['pykrotik'],
     install_requires=[],
     license='GPLv3',
     description='Mikrotik api lib',

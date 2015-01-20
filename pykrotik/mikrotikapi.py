@@ -4,11 +4,13 @@ import select
 from apiros import ApiRos
 
 class MikrotikApi:
-    def __init__(self, host, username, password='', port=8728):
+    def __init__(self, host, username, password='', port=8728, timeout=10):
         self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.__socket.connect((host, port))
         self.__apiros = ApiRos(self.__socket)
         self.__apiros.login(username, password)
+
+        self._timeout = timeout
 
     def __attr_to_key_value(self, attr):
         elem = attr[1:] # Remove first =
@@ -26,7 +28,8 @@ class MikrotikApi:
             response.append(element)
         return response
 
-    def exec_command(self, command, query_word=None, raw_response=False):
+    def exec_command(self, command, query_word=None, raw_response=False,
+                     timeout=None):
         """ Execute command to device.
         " @return the response as a dict by default
         " if you whant the response as set the raw_response param
@@ -38,11 +41,17 @@ class MikrotikApi:
         if not query_word:
             query_word = []
 
+        timeout = timeout or self._timeout
+
+        print 'Start'
+
         self.__apiros.writeSentence([command] + query_word)
         finished = False
         while not finished:
             # Select wait for i/o in socket
-            r = select.select([self.__socket], [], [], None)
+            print 'Helo'
+            r = select.select([self.__socket], [], [], timeout)
+            print r
             if self.__socket in r[0]:
                 resp = self.__apiros.readSentence()
                 if '!done' in resp:
