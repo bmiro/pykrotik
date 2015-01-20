@@ -1,6 +1,6 @@
 #!/usr/bin/python
  
-import sys, posix, time, md5, binascii, socket, select
+import md5, binascii
  
 class ApiRos:
     "Routeros api"
